@@ -2,7 +2,7 @@ import React from 'react';
 import css from 'components/ImageGalleryItem/ImageGalleryItem.module.css';
 import PropTypes from 'prop-types';
 
-export default function ImageGalleryItem({ hit, onClick }) {
+export function ImageGalleryItem({ hit, onClick }) {
   const { largeImageURL, webformatURL } = hit;
 
   return (
@@ -21,6 +21,6 @@ ImageGalleryItem.propTypes = {
   hit: PropTypes.exact({
     largeImageURL: PropTypes.string.isRequired,
     webformatURL: PropTypes.string.isRequired,
-  }),
+  }).isRequired,
   onClick: PropTypes.func.isRequired,
 };

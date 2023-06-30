@@ -1,9 +1,9 @@
 import React from 'react';
 import css from 'components/ImageGallery/ImageGallery.module.css';
 import PropTypes from 'prop-types';
-import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
+import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 
-export default function ImageGallery({ hits, onClick }) {
+export function ImageGallery({ hits, onClick }) {
   return (
     <ul className={css.gallery}>
       {hits.map(hit => {
@@ -14,10 +14,10 @@ export default function ImageGallery({ hits, onClick }) {
 }
 
 ImageGallery.propTypes = {
-  hits: PropTypes.arrayOf(
+  hits: PropTypes.objectOf(
     PropTypes.exact({
       id: PropTypes.number.isRequired,
-      onClick: PropTypes.func.isRequired,
-    }).isRequired
+    })
   ).isRequired,
+  onClick: PropTypes.func.isRequired,
 };
