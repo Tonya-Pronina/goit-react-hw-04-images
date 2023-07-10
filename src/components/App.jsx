@@ -10,7 +10,6 @@ export const App = () => {
   const [query, setQuery] = useState(null);
   const [hits, setHits] = useState([]);
   const [page, setPage] = useState(1);
-  const perPage = 12;
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [currentLargeImageURL, setCurrentLargeImageURL] = useState('');
@@ -74,7 +73,7 @@ export const App = () => {
           setLoading(false);
         });
     }
-  }, [query, page]);
+  }, [query, totalPages, page]);
 
   useEffect(() => {
     hitsLengthRef.current = hits.length;
