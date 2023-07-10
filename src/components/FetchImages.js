@@ -1,24 +1,24 @@
 import axios from "axios";
 
+const KEY = '35900123-c9c0239e27eb1dd1d96f05647';
+axios.defaults.baseURL = 'https://pixabay.com/api';
 
-export const FetchImages = async (query, page = 1, per_page = 12) => {
+export const FetchImages = async (query, page = 1, per_page) => {
     const params = new URLSearchParams({
-    key: '35900123-c9c0239e27eb1dd1d96f05647',
+    key: KEY,
     q: query,
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: true,
     page,
-    per_page,
+    per_page: 12,
   });
 
-  const response = await axios.get(
-    `https://pixabay.com/api/?${params.toString()}`
-  );
+  const response = await axios.get('/', { params });
 
    if (response.status !== 200) {
     throw new Error(response.status);
   };
-
   return response.data
+  
 }

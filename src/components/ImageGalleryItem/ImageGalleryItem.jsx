@@ -2,8 +2,8 @@ import React from 'react';
 import css from 'components/ImageGalleryItem/ImageGalleryItem.module.css';
 import PropTypes from 'prop-types';
 
-export function ImageGalleryItem({ hit, onClick }) {
-  const { largeImageURL, webformatURL } = hit;
+export function ImageGalleryItem({ onClick, webformatURL, largeImageURL }) {
+  // const { largeImageURL, webformatURL } = hit;
 
   return (
     <li className={css.item}>
@@ -18,9 +18,6 @@ export function ImageGalleryItem({ hit, onClick }) {
 }
 
 ImageGalleryItem.propTypes = {
-  hit: PropTypes.exact({
-    largeImageURL: PropTypes.string.isRequired,
-    webformatURL: PropTypes.string.isRequired,
-  }).isRequired,
+  webformatURL: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
 };
