@@ -4,25 +4,13 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
 export const Modal = ({ onModalClose, largeImageURL }) => {
-  // useEffect(() => {
-  //   const handleKeyDown = e => {
-  //     if (e.keyCode === 27 || e.currentTarget === e.target) {
-  //       onModalClose();
-  //     }
-  //   };
-  //   window.addEventListener('keydown', handleKeyDown);
-
-  //   return () => {
-  //     window.removeEventListener('keydown', handleKeyDown);
-  //   };
-  // }, [onModalClose]);
+  const handleKeyDown = e => {
+    if (e.keyCode === 27 || e.currentTarget === e.target) {
+      onModalClose();
+    }
+  };
 
   useEffect(() => {
-    const handleKeyDown = e => {
-      if (e.code === 'Escape') {
-        onModalClose();
-      }
-    };
     window.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
 
@@ -33,7 +21,7 @@ export const Modal = ({ onModalClose, largeImageURL }) => {
   }, [onModalClose]);
 
   return (
-    <div className={css.backdrop} onClick={this.handleKeyDown}>
+    <div className={css.backdrop} onClick={handleKeyDown}>
       <div className={css.modal}>
         <img src={largeImageURL} alt="" />
       </div>
@@ -43,5 +31,5 @@ export const Modal = ({ onModalClose, largeImageURL }) => {
 
 Modal.propTypes = {
   largeImageURL: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onModalClose: PropTypes.func.isRequired,
 };

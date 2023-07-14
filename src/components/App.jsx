@@ -14,47 +14,18 @@ export const App = () => {
   const [loading, setLoading] = useState(false);
   const [currentLargeImageURL, setCurrentLargeImageURL] = useState('');
   const hitsLengthRef = useRef(hits.length);
+  const prevSearchQueryRef = useRef(null);
+  const prevPageRef = useRef(1);
   const [error, setError] = useState({
     status: false,
     message: '',
   });
 
-  // useEffect(() => {
-  //   const handleFetchImg = async () => {
-  //     try {
-  //       setLoading(true);
-  //       const data = await FetchImages(query, page, perPage);
-
-  //       if (data.hits.length === 0) {
-  //         setError({
-  //           status: true,
-  //           message: `There are no images matching ${query}, try again.`,
-  //         });
-  //         return;
-  //       }
-  //       const totalPages = Math.ceil(data.totalHits / perPage);
-
-  //       setHits(prevHits => [...prevHits, data.hits]);
-  //       setTotalPages(totalPages);
-  //     } catch (error) {
-  //       setError({
-  //         status: true,
-  //         message: 'Something went wrong! Please try again later!',
-  //       });
-  //       console.log(error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   if (query && page > 0) {
-  //     handleFetchImg();
-  //   }
-  // }, [query, page, perPage]);
   useEffect(() => {
-    const newSearchQuery = setQuery(prevSearchQuery => prevSearchQuery);
-    const newPage = setPage(prevPage => prevPage);
-    if (query !== '' && (query !== newSearchQuery || newPage !== page)) {
+    if (
+      query !== '' &&
+      (query !== prevSearchQueryRef.current || page !== prevPageRef.current)
+    ) {
       setLoading(true);
       FetchImages(query, page)
         .then(({ hits: newHits, totalHits }) => {
@@ -66,14 +37,14 @@ export const App = () => {
             return;
           }
           setHits(prevHits => [...prevHits, ...newHits]);
-          setTotalPages(totalPages);
+          setTotalPages(totalHits);
         })
         .catch(error => console.error(error.response))
         .finally(() => {
           setLoading(false);
         });
     }
-  }, [query, totalPages, page]);
+  }, [query, page]);
 
   useEffect(() => {
     hitsLengthRef.current = hits.length;

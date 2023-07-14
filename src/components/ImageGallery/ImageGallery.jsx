@@ -4,40 +4,13 @@ import PropTypes from 'prop-types';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 
 export const ImageGallery = ({ hits, handleClick }) => {
-  // return (
-  //   <ul className={css.gallery}>
-  //     {hits.map(hit => {
-  //       return (
-  //         <ImageGalleryItem
-  //           key={id}
-  //           webformatURL={webformatURL}
-  //           hit={hit}
-  //           onClick={() => {
-  //             onClick(largeImageURL);
-  //           }}
-  //         ></ImageGalleryItem>
-  //       );
-  //     })}
-  //     {hits.map(({ id, webformatURL, largeImageURL, hit }) => (
-  //       <ImageGalleryItem
-  //         key={id}
-  //         webformatURL={webformatURL}
-  //         hit={hit}
-  //         onClick={() => {
-  //           handleModal(largeImageURL);
-  //         }}
-  //       ></ImageGalleryItem>
-  //     ))}
-  //   </ul>
-  // );
-
   return (
-    <ul className={css.ImageGallery}>
-      {hits.map(({ id, webformatURL, largeImageURL, hit }) => (
+    <ul className={css.gallery}>
+      {hits.map(({ id, webformatURL, largeImageURL }) => (
         <ImageGalleryItem
           key={id}
           webformatURL={webformatURL}
-          hit={hit}
+          largeImageURL={largeImageURL}
           onClick={() => {
             handleClick(largeImageURL);
           }}
@@ -48,10 +21,13 @@ export const ImageGallery = ({ hits, handleClick }) => {
 };
 
 ImageGallery.propTypes = {
-  hits: PropTypes.objectOf(
+  hits: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+      hit: PropTypes.string,
     })
-  ),
-  handleModal: PropTypes.func.isRequired,
+  ).isRequired,
+  handleClick: PropTypes.func.isRequired,
 };
