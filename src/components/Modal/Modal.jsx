@@ -18,7 +18,7 @@ export const Modal = ({ onModalClose, largeImageURL }) => {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'auto';
     };
-  }, [onModalClose, handleKeyDown()]);
+  }, [onModalClose, handleKeyDown]);
 
   return (
     <div className={css.backdrop} onClick={handleKeyDown}>
