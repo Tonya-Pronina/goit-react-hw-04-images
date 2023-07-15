@@ -10,6 +10,7 @@ export const App = () => {
   const [hits, setHits] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [isBtnVisible, setIsBtnVisible] = useState(false);
   const [currentLargeImageURL, setCurrentLargeImageURL] = useState('');
   const hitsLengthRef = useRef(hits.length);
   const prevSearchQueryRef = useRef(null);
@@ -26,7 +27,8 @@ export const App = () => {
     ) {
       FetchImages(query, page)
         .then(({ hits: newHits, totalHits }) => {
-          if (query.trim() === '' || totalHits === 0) {
+          setIsBtnVisible(page < Math.ceil(totalPages / 12));
+          if (totalHits === 0) {
             setError({
               status: true,
               message: `There are no images matching ${query}, try again.`,
@@ -38,7 +40,7 @@ export const App = () => {
         })
         .catch(error => console.error(error.response));
     }
-  }, [query, page]);
+  }, [query, page, totalPages]);
 
   useEffect(() => {
     hitsLengthRef.current = hits.length;
@@ -63,12 +65,6 @@ export const App = () => {
   const handleModal = (currentLargeImageURL = '') => {
     setCurrentLargeImageURL(currentLargeImageURL);
   };
-
-  const isBtnVisible =
-    hits.length > 0 &&
-    page < totalPages &&
-    hits.length >= 12 &&
-    page !== totalPages;
 
   return (
     <div>

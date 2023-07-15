@@ -12,7 +12,7 @@ export const Searchbar = ({ onSubmit }) => {
   const handleSubmit = e => {
     e.preventDefault();
 
-    onSubmit(queryInput);
+    onSubmit(queryInput.trim());
   };
 
   return (
