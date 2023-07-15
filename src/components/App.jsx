@@ -11,7 +11,6 @@ export const App = () => {
   const [hits, setHits] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [currentLargeImageURL, setCurrentLargeImageURL] = useState('');
   const hitsLengthRef = useRef(hits.length);
   const prevSearchQueryRef = useRef(null);
@@ -26,7 +25,6 @@ export const App = () => {
       query !== '' &&
       (query !== prevSearchQueryRef.current || page !== prevPageRef.current)
     ) {
-      setLoading(true);
       FetchImages(query, page)
         .then(({ hits: newHits, totalHits }) => {
           if (query.trim() === '' || totalHits === 0) {
@@ -39,10 +37,7 @@ export const App = () => {
           setHits(prevHits => [...prevHits, ...newHits]);
           setTotalPages(totalHits);
         })
-        .catch(error => console.error(error.response))
-        .finally(() => {
-          setLoading(false);
-        });
+        .catch(error => console.error(error.response));
     }
   }, [query, page]);
 
@@ -70,16 +65,19 @@ export const App = () => {
     setCurrentLargeImageURL(currentLargeImageURL);
   };
 
-  const isBtnVisible = hits.length > 0 && page < totalPages && !loading;
+  const isBtnVisible =
+    hits.length > 0 &&
+    page < totalPages &&
+    hits.length >= 12 &&
+    page !== totalPages;
 
   return (
     <div>
       <Searchbar onSubmit={handleSubmit} />
-      {error.status && !loading && error.message}
+      {error.status && error.message}
       {hits.length > 0 && (
         <ImageGallery hits={hits} handleClick={handleModal} />
       )}
-      {loading && <Loader />}
       {isBtnVisible && <Button onClick={handleLoadMore} />}
       {currentLargeImageURL && (
         <Modal
