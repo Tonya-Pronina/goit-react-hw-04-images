@@ -11,36 +11,73 @@ export const App = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [isBtnVisible, setIsBtnVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [currentLargeImageURL, setCurrentLargeImageURL] = useState('');
   const hitsLengthRef = useRef(hits.length);
-  const prevSearchQueryRef = useRef(null);
-  const prevPageRef = useRef(1);
+  // const prevSearchQueryRef = useRef(null);
+  // const prevPageRef = useRef(1);
+  const perPage = 12;
   const [error, setError] = useState({
     status: false,
     message: '',
   });
 
+  // useEffect(() => {
+  //   if (
+  //     query !== '' &&
+  //     (query !== prevSearchQueryRef.current || page !== prevPageRef.current)
+  //   ) {
+  //     FetchImages(query, page)
+  //       .then(({ hits: newHits, totalHits }) => {
+  //         setIsBtnVisible(page < Math.ceil(totalPages / 12));
+  //         if (totalHits === 0) {
+  //           setError({
+  //             status: true,
+  //             message: `There are no images matching ${query}, try again.`,
+  //           });
+  //           return;
+  //         }
+  //         setHits(prevHits => [...prevHits, ...newHits]);
+  //         setTotalPages(totalHits);
+  //       })
+  //       .catch(error => console.error(error.response));
+  //   }
+  // }, [query, page, totalPages]);
+
   useEffect(() => {
-    if (
-      query !== '' &&
-      (query !== prevSearchQueryRef.current || page !== prevPageRef.current)
-    ) {
-      FetchImages(query, page)
-        .then(({ hits: newHits, totalHits }) => {
-          setIsBtnVisible(page < Math.ceil(totalPages / 12));
-          if (totalHits === 0) {
-            setError({
-              status: true,
-              message: `There are no images matching ${query}, try again.`,
-            });
-            return;
-          }
-          setHits(prevHits => [...prevHits, ...newHits]);
-          setTotalPages(totalHits);
-        })
-        .catch(error => console.error(error.response));
+    const handleHitsFetch = async () => {
+      try {
+        setLoading(true);
+
+        const data = await FetchImages(query, page, perPage);
+
+        if (data.hits.length === 0) {
+          setError({
+            status: true,
+            message: `Sorry, there are no images matching ${query}. Please try again.`,
+          });
+          return;
+        }
+
+        const totalPages = Math.ceil(data.totalHits / perPage);
+        console.log(totalPages);
+
+        setHits(prevHits => [...prevHits, ...data.hits]);
+        setTotalPages(totalPages);
+      } catch (error) {
+        setError({
+          status: true,
+          message: 'Something went wrong',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (query && page > 0) {
+      handleHitsFetch();
     }
-  }, [query, page, totalPages]);
+  }, [query, page, perPage]);
 
   useEffect(() => {
     hitsLengthRef.current = hits.length;
@@ -65,6 +102,12 @@ export const App = () => {
   const handleModal = (currentLargeImageURL = '') => {
     setCurrentLargeImageURL(currentLargeImageURL);
   };
+
+  useEffect(() => {
+    const newIsBtnVisible =
+      hits.length > 0 && page < Math.ceil(totalPages) && !loading;
+    setIsBtnVisible(newIsBtnVisible);
+  }, [hits.length, page, totalPages, loading]);
 
   return (
     <div>
